@@ -5,6 +5,7 @@ static Window *window;
 static TextLayer *name_layer;
 static TextLayer *phone_layer;
 static BitmapLayer *icon_layer;
+static TextLayer *resp_y_layer;
 
 static GBitmap *icon_bitmap = NULL;
 
@@ -36,7 +37,52 @@ static void send_cmd(void) {
   app_message_outbox_send();
 }
 
+
+static void createPopup() {
+
+Layer *window_layer = window_get_root_layer(window);
+
+resp_y_layer = text_layer_create(GRect(0,0,144,168));
+        text_layer_set_text_color(resp_y_layer, GColorClear);
+        text_layer_set_background_color(resp_y_layer, GColorClear);
+        text_layer_set_font(resp_y_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+        text_layer_set_text_alignment(resp_y_layer, GTextAlignmentCenter);
+        layer_add_child(window_layer, text_layer_get_layer(resp_y_layer));
+
+text_layer_set_text(resp_y_layer, "Exchange contact?");
+	 
+
+}
+
+static void showPopup() {
+
+text_layer_set_text_color(resp_y_layer, GColorWhite);
+        text_layer_set_background_color(resp_y_layer, GColorBlack);
+}
+
+static void dismissPopup() {
+
+	text_layer_set_text_color(resp_y_layer, GColorClear);
+        text_layer_set_background_color(resp_y_layer, GColorClear);
+
+}
+
+static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
+text_layer_set_text(name_layer, "FETCHING CONTACT...");
+send_cmd();
+dismissPopup();
+}
+ 
+static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+dismissPopup();
+
+}
+
+
+
 void accel_tap_handler(AccelAxisType axis, int32_t direction) {
+
+
   // Process tap on ACCEL_AXIS_X, ACCEL_AXIS_Y or ACCEL_AXIS_Z
   // Direction is 1 or -1
  
@@ -115,10 +161,11 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
         if (data_handshake == true && tap_handshake == true)
         {
           vibes_double_pulse();
-          text_layer_set_text(name_layer, "FETCHING CONTACT...");
+          
           text_layer_set_text(phone_layer, "");
           APP_LOG(APP_LOG_LEVEL_ERROR, "handshake detected!");
-          send_cmd();
+	showPopup();
+          //send_cmd();
           data_handshake = false;
           tap_handshake = false;
           accel_data_service_unsubscribe();
@@ -133,11 +180,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
  
 }
  
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-}
- 
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-}
+
 
 static void click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
@@ -198,11 +241,10 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(phone_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(phone_layer));
 
-
   Tuplet initial_values[] = {
     TupletInteger(ID_KEY, (uint8_t) 1),
-    TupletCString(NAME_KEY, "Neel M."),
-    TupletCString(PHONE_KEY, "408-318-3895")
+    TupletCString(NAME_KEY, "Neel"),
+    TupletCString(PHONE_KEY, "Ready")
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
@@ -232,14 +274,20 @@ static void init(void) {
     .unload = window_unload
   });
 
+ // window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+
+window_set_click_config_provider(window, &click_config_provider);
+
   const int inbound_size = 64;
   const int outbound_size = 64;
   app_message_open(inbound_size, outbound_size);
 
   const bool animated = true;
 
-  data_handshake = false;
+  data_handshake = true;
   tap_handshake = false;
+
+  createPopup();
 
   accel_service_set_samples_per_update(25);
   accel_data_service_subscribe(25, &accel_data_handler);

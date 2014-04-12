@@ -1,0 +1,8 @@
+{
+	"DEBUG: ": "DEBUG: ",
+	"ERROR: ": "ERROR: ",
+	"Home": "Home",
+	"Hello": "Hello",
+	"Could not connect to database: %s": "Could not connect to database: %s",
+	"INFO: ": "INFO: "
+}

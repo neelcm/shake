@@ -5,6 +5,7 @@ static Window *window;
 static TextLayer *name_layer;
 static TextLayer *phone_layer;
 static BitmapLayer *icon_layer;
+
 static GBitmap *icon_bitmap = NULL;
 
 static AppSync sync;
@@ -97,7 +98,7 @@ void accel_data_handler(AccelData *data, uint32_t num_samples) {
       {
         if ( (int)avg_x < 200 )
         {
-          if ( (int) avg_x < 200)
+          if ( (int) avg_z < 200)
             {
               APP_LOG(APP_LOG_LEVEL_ERROR, "accel data detected!!");
               data_handshake = true;
@@ -114,6 +115,8 @@ static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
         if (data_handshake == true && tap_handshake == true)
         {
           vibes_double_pulse();
+          text_layer_set_text(name_layer, "FETCHING CONTACT...");
+          text_layer_set_text(phone_layer, "");
           APP_LOG(APP_LOG_LEVEL_ERROR, "handshake detected!");
           send_cmd();
           data_handshake = false;
@@ -154,10 +157,12 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       break;
 
     case NAME_KEY:
+      if(new_tuple->value->cstring[0] == 'x') send_cmd();
       text_layer_set_text(name_layer, new_tuple->value->cstring);
       break;
 
     case PHONE_KEY:
+    //if(new_tuple->value->cstring[0] == 'x') send_cmd();
     text_layer_set_text(phone_layer, new_tuple->value->cstring);
     break;
   }
@@ -171,6 +176,13 @@ static void window_load(Window *window) {
 
   icon_layer = bitmap_layer_create(GRect(32, 10, 80, 80));
   layer_add_child(window_layer, bitmap_layer_get_layer(icon_layer));
+
+  // topLayer = text_layer_create(GRect(0, 35, 144, 68));
+  // text_layer_set_text_color(topLayer, GColorBlack);
+  // text_layer_set_background_color(topLayer, GColorClear);
+  // text_layer_set_font(topLayer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  // text_layer_set_text_alignment(topLayer, GTextAlignmentCenter);
+  // layer_add_child(window_layer, text_layer_get_layer(name_layer));
 
   name_layer = text_layer_create(GRect(0, 55, 144, 68));
   text_layer_set_text_color(name_layer, GColorBlack);

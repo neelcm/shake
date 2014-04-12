@@ -2,7 +2,7 @@ function getContact(latitude, longitude) {
   var response;
   var req = new XMLHttpRequest();
   console.log("GETTING");
-  req.open('GET', "http://192.168.2.8:3000/vamsi?", true);
+  req.open('GET', "http://192.168.2.8:3000/neel?", true);
   req.onload = function(e) {
     
     console.log(req.responseText);
@@ -11,6 +11,7 @@ function getContact(latitude, longitude) {
         if (response && response.list && response.list.length > 0) {
           name = response.list[0].name;
           phone = response.list[0].phone;
+
           console.log("RETURNING");
           console.log(name);
           console.log(phone);

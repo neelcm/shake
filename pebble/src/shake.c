@@ -19,22 +19,30 @@ enum ShakeKeys {
   PHONE_KEY = 0x2
 };
 
+static void send_cmd(void) {
+  Tuplet value = TupletInteger(1, 1);
+
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+
+  if (iter == NULL) {
+    return;
+  }
+
+  dict_write_tuplet(iter, &value);
+  dict_write_end(iter);
+
+  app_message_outbox_send();
+}
+
 void accel_tap_handler(AccelAxisType axis, int32_t direction) {
   // Process tap on ACCEL_AXIS_X, ACCEL_AXIS_Y or ACCEL_AXIS_Z
   // Direction is 1 or -1
  
-        //if (axis == ACCEL_AXIS_X && axis == ACCEL_AXIS_Y)
-                //APP_LOG(APP_LOG_LEVEL_ERROR, "X AND Y");
- 
-        //if (axis == ACCEL_AXIS_Y && axis == ACCEL_AXIS_Z)
-   // APP_LOG(APP_LOG_LEVEL_ERROR, "Y AND Z");
- 
     if (axis == ACCEL_AXIS_Y)
     {
-             APP_LOG(APP_LOG_LEVEL_ERROR, "Y AXIS BITCHES!");
-         APP_LOG(APP_LOG_LEVEL_ERROR, "handshake detected!");
+        APP_LOG(APP_LOG_LEVEL_ERROR, "tap from Y AXIS detected!!");
         tap_handshake = true;
-      //FUNCTION CALL FROM HERE for contact info
     }
  
   int x = direction;
@@ -55,9 +63,7 @@ void handle_deinit(void) {
 // batch
 void accel_data_handler(AccelData *data, uint32_t num_samples) {
   // Process 10 events - every 1 second
-  
-  APP_LOG(APP_LOG_LEVEL_ERROR, "SAMPLE COLLECTED!");
- 
+   
   int total_x = 0;
   int total_y = 0;
   int total_z = 0;
@@ -87,13 +93,13 @@ void accel_data_handler(AccelData *data, uint32_t num_samples) {
     snprintf(str_z, sizeof(str_z), "%d", avg_z);
     APP_LOG(APP_LOG_LEVEL_ERROR, str_z);
  
-    if ((int)avg_y > 690)
+    if ((int)avg_y > 400)
       {
         if ( (int)avg_x < 200 )
         {
           if ( (int) avg_x < 200)
             {
-              APP_LOG(APP_LOG_LEVEL_ERROR, "Proper handshake values detected!!");
+              APP_LOG(APP_LOG_LEVEL_ERROR, "accel data detected!!");
               data_handshake = true;
             }
         }
@@ -104,10 +110,16 @@ void accel_data_handler(AccelData *data, uint32_t num_samples) {
  
 static void handle_tick(struct tm *tick_time, TimeUnits units_changed)
 {
-        APP_LOG(APP_LOG_LEVEL_ERROR, "Time flies!");
+        APP_LOG(APP_LOG_LEVEL_ERROR, "checking for handshake...");
         if (data_handshake == true && tap_handshake == true)
         {
-          APP_LOG(APP_LOG_LEVEL_ERROR, "Something unique");
+          vibes_double_pulse();
+          APP_LOG(APP_LOG_LEVEL_ERROR, "handshake detected!");
+          send_cmd();
+          data_handshake = false;
+          tap_handshake = false;
+          accel_data_service_unsubscribe();
+          accel_tap_service_unsubscribe();
         }
 }
  
@@ -152,21 +164,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
 }
 
 
-static void send_cmd(void) {
-  Tuplet value = TupletInteger(1, 1);
 
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
-
-  if (iter == NULL) {
-    return;
-  }
-
-  dict_write_tuplet(iter, &value);
-  dict_write_end(iter);
-
-  app_message_outbox_send();
-}
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
@@ -192,13 +190,13 @@ static void window_load(Window *window) {
   Tuplet initial_values[] = {
     TupletInteger(ID_KEY, (uint8_t) 1),
     TupletCString(NAME_KEY, "Neel M."),
-    TupletCString(PHONE_KEY, "4083183895")
+    TupletCString(PHONE_KEY, "408-318-3895")
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
       sync_tuple_changed_callback, sync_error_callback, NULL);
 
-  send_cmd();
+  //send_cmd();
 }
 
 static void window_unload(Window *window) {

@@ -1,21 +1,8 @@
-
-function iconFromWeatherId(weatherId) {
-  if (weatherId < 600) {
-    return 2;
-  } else if (weatherId < 700) {
-    return 3;
-  } else if (weatherId > 800) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-function getContact(name) {
+function getContact(latitude, longitude) {
   var response;
   var req = new XMLHttpRequest();
   console.log("GETTING");
-  req.open('GET', "http://192.168.1.4:3000/vamsi?", true);
+  req.open('GET', "http://192.168.2.8:3000/vamsi?", true);
   req.onload = function(e) {
     
     console.log(req.responseText);
@@ -43,13 +30,13 @@ function getContact(name) {
       }
     }
   }
+  
   req.send(null);
 }
 
 function locationSuccess(pos) {
   var coordinates = pos.coords;
-  //fetchWeather(coordinates.latitude, coordinates.longitude);
-  getContact("vamsi");
+  getContact(coordinates.latitude, coordinates.longitude);
 }
 
 function locationError(err) {
@@ -74,7 +61,6 @@ Pebble.addEventListener("appmessage",
                         function(e) {
                           window.navigator.geolocation.getCurrentPosition(locationSuccess, locationError, locationOptions);
                           console.log(e.type);
-                          console.log(e.payload.temperature);
                           console.log("message!");
                         });
 

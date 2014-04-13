@@ -90,6 +90,10 @@ app.get('/vamsi', function(req, res){
 			            'email': 'moulees2@illinois.edu'
 	    				}]
 				 	});
+
+				app.set('retval', 'vamsi');
+
+				console.log("resolved conflict! - vamsi");
 			}
 
 			else {
@@ -194,7 +198,7 @@ app.get('/neel', function(req, res){
 	    				}]
 				 	});
 
-				 	app.set('retval', 'sully');
+				 	//app.set('retval', 'sully');
 				}
 	
 				else {
@@ -207,7 +211,7 @@ app.get('/neel', function(req, res){
 	    				}]
 				 	});
 
-					app.set('retval', 'vamsi');
+					//app.set('retval', 'vamsi');
 
 				} 
 
@@ -287,6 +291,9 @@ app.get('/sully', function(req, res){
 			console.log('second shake: ' + app.get('secondName'));
 
 			if(app.get('firstName') == 'neel') {
+					
+				app.set('retval', 'sully');
+
 				res.json({
 	    			'list': [{
 			            'name': 'Neel Mouleeswaran',
@@ -294,9 +301,13 @@ app.get('/sully', function(req, res){
 			            'email': 'moulees2@illinois.edu'
 	    				}]
 				 	});
+
 			}
 
 			else if(app.get('firstName') == 'vamsi') {
+				
+				app.set('retval', 'sully');
+
 				res.json({
 	    			'list': [{
 			            'name': 'Vamsi Ponnapalli',
@@ -304,18 +315,20 @@ app.get('/sully', function(req, res){
 			            'email': 'ponnapa2@illinois.edu'
 	    				}]
 				 	});
+
+				
 			}
 
-			else if(app.get('firstName') == app.get('secondName')) {
+			// else if(app.get('firstName') == app.get('secondName')) {
 				
-				res.json({
-	    			'list': [{
-			            'name': 'Neel Mouleeswaran',
-			            'phone': '408-318-3895',
-			            'email': 'moulees2@illinois.edu'
-	    				}]
-				 	});
-			}
+			// 	res.json({
+	  //   			'list': [{
+			//             'name': 'Neel Mouleeswaran',
+			//             'phone': '408-318-3895',
+			//             'email': 'moulees2@illinois.edu'
+	  //   				}]
+			// 	 	});
+			// }
 
 			else {
 				res.send("ERROR!");

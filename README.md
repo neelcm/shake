@@ -1,7 +1,9 @@
 ![shake](http://neel.io/img/shake_banner.png)
 
-<<<<<<< HEAD
-=======
+shake for Pebble
+======
+
+shake allows any two people wearing a Pebble to quickly exchange contact information simply by shaking hands. shake takes advantage of the Pebble's motion sensors to detect when a handshake motion has occurred, and an Express backend evaluates the raw data along with location-based information to determine which two people shook hands. Upon confirmation, both parties receive the contact information of the person they just met.
+
 
 ![shake2](http://neel.io/img/shake_flow2.png)
->>>>>>> 2e7a2383bb12d1715acf6f4887356938f851a8b6

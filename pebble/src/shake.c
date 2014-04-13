@@ -48,7 +48,7 @@ resp_y_layer = text_layer_create(GRect(0,0,144,168));
        text_layer_set_font(resp_y_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
        text_layer_set_text_alignment(resp_y_layer, GTextAlignmentCenter);
        layer_add_child(window_layer, text_layer_get_layer(resp_y_layer));
- 
+// printing promp message to watchface 
 text_layer_set_text(resp_y_layer, "     UP->YES                                           Exchange            Contact?                              DOWN->NO");
  
  

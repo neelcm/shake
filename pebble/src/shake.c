@@ -215,10 +215,10 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
 
 
 static void window_load(Window *window) {
+  
   Layer *window_layer = window_get_root_layer(window);
 
-  icon_layer = bitmap_layer_create(GRect(32, 10, 80, 80));
-  layer_add_child(window_layer, bitmap_layer_get_layer(icon_layer));
+
 
   // topLayer = text_layer_create(GRect(0, 35, 144, 68));
   // text_layer_set_text_color(topLayer, GColorBlack);
@@ -241,14 +241,19 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(phone_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(phone_layer));
 
+  // icon_bitmap = gbitmap_create_with_resource(0);
+  //   icon_layer = bitmap_layer_create(GRect(0, 0, 144, 168));
+  // bitmap_layer_set_bitmap(icon_layer, icon_bitmap);
+  // layer_add_child(window_layer, bitmap_layer_get_layer(icon_layer));
+
   Tuplet initial_values[] = {
     TupletInteger(ID_KEY, (uint8_t) 1),
     TupletCString(NAME_KEY, "Neel"),
     TupletCString(PHONE_KEY, "Ready")
   };
 
-  app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
-      sync_tuple_changed_callback, sync_error_callback, NULL);
+  // app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
+  //     sync_tuple_changed_callback, sync_error_callback, NULL);
 
   //send_cmd();
 }

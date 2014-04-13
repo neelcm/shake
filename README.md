@@ -11,4 +11,4 @@ shake takes advantage of Pebble's motion sensors to detect when a handshake has 
 
 **technologies used:** C, JavaScript, Node.js, Express
 
-**created in under 36 hours by** Neel Mouleeswaran, Vamsi Ponnapalli, & Jeremy Sullivan
+**created in under 36 hours by** Neel Mouleeswaran, Vamsi Ponnapalli & Jeremy Sullivan

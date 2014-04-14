@@ -209,7 +209,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
      break;
  
    case NAME_KEY:
-     if(new_tuple->value->cstring[0] == 'x') send_cmd();
+     //if(new_tuple->value->cstring[0] == 'x') send_cmd();
      text_layer_set_text(name_layer, new_tuple->value->cstring);
      break;
  

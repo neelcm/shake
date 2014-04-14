@@ -2,7 +2,7 @@ function getContact(latitude, longitude) {
   var response;
   var req = new XMLHttpRequest();
   console.log("GETTING");
-  req.open('GET', "http://192.168.1.3:3000/neel?", true);
+  req.open('GET', "http://172.16.131.75:3000/neel?", true);
   req.onload = function(e) {
     
     console.log(req.responseText);
